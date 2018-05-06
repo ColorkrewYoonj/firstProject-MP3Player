@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/basicplayer3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/commons-logging-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/jaudiotagger-2.2.6-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/jogg-0.0.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/jorbis-0.0.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/jspeex0.9.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/mp3spi1.9.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/mybatis-3.2.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/ojdbc6.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/tritonus_share.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/vorbisspi1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/basicplayer3.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-api.jar"/>
+	<classpathentry kind="lib" path="lib/jaudiotagger-2.2.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="lib/jspeex0.9.7.jar"/>
+	<classpathentry kind="lib" path="lib/mp3spi1.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/mybatis-3.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="lib/tritonus_share.jar"/>
+	<classpathentry kind="lib" path="lib/vorbisspi1.0.2.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/user/work_space/MiniProject/lib/jl1.0.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

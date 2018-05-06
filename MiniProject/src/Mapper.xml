@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 회원정보 처리 SQL -->
+<mapper namespace="MiniProject.DAO.MiniProjectMapper">
+<insert id = "SignUp" parameterType = "Private">
+insert into Aprivate (
+		id
+		, password
+		, name
+		, age
+		, gender
+)
+values (
+	#{id}
+	, #{password} 
+	, #{name}
+	, #{age}
+	, #{gender}
+)
+</insert>
+<select id = "LogIn" parameterType = "map" resultType = "int">
+select count(*) from Aprivate where id = #{id} and password = #{password} 
+</select>
+<select id="genreRecommendation" parameterType = "String" resultType = "Song">
+select title
+		,singer
+    	,genre_name
+from (select *
+		from asong a
+		order by a.PLAY_COUNT desc) a
+        ,asinger c
+        ,agenre b
+where 
+		a.singer_code =c.SINGER_CODE 
+		and a.genre_code =b.GENRE_CODE
+		and rownum <![CDATA[<]]> 4
+		<!-- song DB에 song_code에서 사용자 Mylist에 song_code를 minus하여 중복제거 -->
+		and song_code in
+				((select  song_code from asong) minus (select song_code from afavorite where id = #{id}))
+		and a.genre_code in 
+				<!-- 가장 많은 장르코드 갯수를 표시 -->
+					(select 
+						s.genre_code
+                	from 
+                		afavorite f 
+                		,asong s 
+                	where 
+                    	f.song_code = s.song_code 
+                    	and id = #{id}
+                	group by
+                   		s.genre_code
+                   		<!-- 장르 즐겨찾기한 노래들의 장르 코드 갯수를 찾는 부분 -->
+                	having 
+                    	count(s.genre_code) in (select max(count(s.genre_code))
+                          				              from afavorite f,asong s
+                                       				 where f.song_code = s.song_code 
+                                       				 and id = #{id}
+                                       				 group by genre_code))
+
+</select>
+<select id="singerRecommendation" parameterType = "String" resultType = "Song">
+select 
+    title
+    ,singer
+    ,genre_name
+from
+     (select *
+	 from asong a
+	 order by a.PLAY_COUNT desc) a
+    ,asinger c
+    ,agenre b
+where a.singer_code =c.SINGER_CODE
+    	and a.genre_code =b.GENRE_CODE
+    	and rownum <![CDATA[<]]> 4
+   		and song_code in 
+   	 	((select  song_code from asong) minus (select song_code from afavorite where id = #{id}))
+		and c.singer_code in 
+					(select 
+						s.singer_code
+               		 from 
+                  	  afavorite f
+                   	 ,asong s
+                where 
+                    f.song_code = s.song_code 
+                    and id = #{id}
+                group by
+                  s.singer_code
+                having 
+                    count(s.singer_code) in (select max(count(s.singer_code))
+                                        from afavorite f,asong s 
+                                        where f.song_code = s.song_code
+                                        and id = #{id}
+                                        group by s.singer_code))
+</select>
+<select id="genderRecommendation" parameterType = "String" resultType = "Song">
+select 
+   	title
+    ,singer
+    ,genre_name
+    ,gender
+from
+   	(select *
+	from asong a
+	order by a.PLAY_COUNT desc) a
+    ,agenre b
+    ,asinger c
+    ,aprivate d
+    ,afavorite e
+where
+    a.singer_code =c.SINGER_CODE
+    and a.genre_code =b.GENRE_CODE
+    and e.song_code = a.song_code
+    and d.id = e.id
+    and rownum <![CDATA[<]]> 4
+    and gender = (select 
+                        gender
+                     from
+                       aprivate 
+                    where 
+						 id = #{id}
+                    group by gender)
+    and a.song_code in ((select song_code from afavorite) 
+                      		  minus (select song_code from afavorite where id = #{id}))
+</select>
+<select id="ageRecommendation" parameterType = "String" resultType = "Song">
+select 
+    title
+    ,singer
+    ,genre_name
+    ,gender
+from
+    (select *
+	from asong a
+	order by a.PLAY_COUNT desc) a
+    ,agenre b
+    ,asinger c
+    ,aprivate d
+    ,afavorite e
+where
+    a.singer_code =c.SINGER_CODE
+    and a.genre_code =b.GENRE_CODE
+    and e.song_code = a.song_code
+    and d.id = e.id
+     and rownum<![CDATA[<]]>4
+    and trunc(age,-1) in (select 
+                            trunc(age,-1)
+                          from
+                            aprivate
+                          where 
+                            id = #{id})
+    and a.song_code in ((select song_code from afavorite) 
+                        minus
+                        (select song_code from afavorite where id = #{id}))
+</select>
+<select id="totalRecommendation"  resultType = "Song">
+select 
+    title
+    ,singer
+    ,genre_name
+from
+    (select *
+	from asong a
+	order by a.PLAY_COUNT desc) a
+    ,asinger c
+    ,agenre b
+where
+    a.singer_code =c.SINGER_CODE
+    and a.genre_code =b.GENRE_CODE
+    and rownum <![CDATA[<]]> 4
+order by play_count desc
+</select>
+<select id="totalGenreRecommendation" parameterType = "int" resultType ="Song">
+select 
+    title
+    ,singer
+    ,genre_name
+from 
+    (select *
+	from asong a
+	order by a.PLAY_COUNT desc) a
+    ,asinger c
+    ,agenre b
+where
+    a.singer_code =c.SINGER_CODE
+    and a.genre_code =b.GENRE_CODE
+    and b.genre_code = #{genre_code}
+    and rownum <![CDATA[<]]> 4
+</select>
+<insert id="SongRegister" parameterType = "map">
+insert into asong values (
+					#{title}
+                    ,(select singer_code from asinger where singer = #{singer})
+                    ,0
+                    ,songseq.nextval
+                    , case when #{genre_name} in (select genre_name from agenre) then (select genre_code from agenre where genre_name = #{genre_name}) else 7 end
+                   	, '없음'
+                    ,#{years})
+</insert>
+<insert id="SingerRegister" parameterType = "map">
+insert into asinger values (SINGERSEQ.NEXTVAL, #{singer})
+</insert>
+<insert id="listRegister" parameterType = "map">
+insert into afavorite(
+			id
+			,song_code
+			,file_path
+			,favorite_code
+)
+ values(
+ 		#{id}
+    	,(select song_code from asong where title = #{title})
+    	,#{file_path}
+   	 	,#{id}||'/'||(select song_code from asong where title = #{title})
+ )
+</insert>
+<select id = "SongOverlapCheck" parameterType = "map" resultType = "int">
+select count(*) from asong where title = #{title} and singer_code = (select singer_code from asinger where singer = #{singer})
+</select>
+<select id = "SingerOverlapCheck" parameterType = "map" resultType = "int">
+select count(*) from asinger where #{singer} in (select singer from asinger)
+</select>
+<select id = "overlapCheck" parameterType = "map" resultType = "int">
+select count(*) from afavorite where favorite_code like (#{id} || '%') ||(select song_code from asong where title = #{title})
+</select>
+<update id = "Revise" parameterType = "map">
+update aprivate set password = #{password}, name = #{name}, gender = #{gender}, age = #{age} where id =#{id}
+</update>
+<update id = "Play_Count" parameterType = "map">
+update asong set play_count = play_count + 1 where title =#{title} and song_code = (select song_code from asong where title = #{title})
+</update>
+<select id="myList" parameterType = "String" resultType = "String">
+select file_path from afavorite where id = #{id}
+</select>
+<delete id="RemoveList" parameterType ="map" >
+delete afavorite where id = #{id} and file_path = #{path}
+</delete>
+</mapper>
